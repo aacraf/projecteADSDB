@@ -21,46 +21,6 @@ import duckdb
 import pandas as pd
 import os
 
-# from google.colab import drive
-# drive.mount('/content/drive')
-
-# con = duckdb.connect(database='/content/drive/MyDrive/projecteADSDB/explotation/explotation.duckdb', read_only=False)
-
-# df_governance = pd.read_sql("SELECT * FROM Governance_Data", con)
-# df_olympics = pd.read_sql("SELECT * FROM Olympics_Data", con)
-# df_countrylevel = pd.read_sql("SELECT * FROM Country_Level_Data", con)
-
-# df_governance.head()
-
-# df_olympics.head()
-
-# df_countrylevel.head()
-
-# """## 2.2. Integrate with data governance
-
-# ## 2.2.2. integrate dataframes
-# """
-
-# data = pd.merge(df_countrylevel, df_governance, left_on=['year', 'iso'], right_on=['year', 'Country Code'])
-# data.drop(columns=['Country Code'], inplace=True)
-
-# data.drop(columns=['notes', 'population_%', 'GDP_%', 'land_area_%'])
-
-# """# Store data"""
-
-# con.execute("DROP TABLE IF EXISTS Governance_Data;")
-# con.execute("DROP TABLE IF EXISTS Olympics_Data;")
-
-# con.execute("DROP TABLE IF EXISTS Olympics_Data;")
-# con.execute("CREATE TABLE IF NOT EXISTS Olympics_Data AS SELECT * FROM df_olympics")
-
-# con.execute("DROP TABLE IF EXISTS Country_Data")
-# con.execute("CREATE TABLE IF NOT EXISTS Country_Data AS SELECT * FROM data")
-
-# con.execute("SHOW TABLES").fetchall()
-
-# con.close()
-
 # """# EXECUTION OF PROCESS"""
 
 def execute_dataIntegration():
@@ -68,14 +28,11 @@ def execute_dataIntegration():
   dirname = os.path.dirname(__file__)
 
   # connect to explotation database
-  con = duckdb.connect(database=os.path.join(pardir, 'explotation.duckdb'), read_only=False)
+  con = duckdb.connect(database=os.path.join(dirname, 'explotation.duckdb'), read_only=False)
 
   # list all tables
   l = con.execute("SHOW TABLES").fetchall()
   out = list([t for (t,) in l])
-
-  # close explotation database connection
-  con.close()
 
   # indidf is the indicators dataframe
   indidf = pd.DataFrame()
@@ -123,11 +80,10 @@ def execute_dataIntegration():
     country_col_new = [col for col in dictdf[newdf].columns if 'iso' in col]
     country_col_new = country_col_new[0]
     # merge the indicator dataframe with the result indicators dataframe
-    indidf = pd.merge(indidf, dictdf[newdf], how='left', left_on=[year_col_indi, country_col_indi], right_on=[year_col_new, country_col_new])
+    indidf = pd.merge(indidf, dictdf[newdf], how='inner', left_on=[year_col_indi, country_col_indi], right_on=[year_col_new, country_col_new])
 
   # drop irrelevant columns
-
-  indidf.drop(columns=['notes', 'population_%', 'GDP_%', 'land_area_%'])
+  indidf.drop(columns=['notes', 'population_%', 'GDP_%', 'land_area_%'], inplace=True)
 
   # drop all indicators tables
   con.execute(f'DROP TABLE IF EXISTS {tablename};')

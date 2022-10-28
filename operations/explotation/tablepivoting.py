@@ -13,61 +13,7 @@ import duckdb
 import pandas as pd
 import os
 
-# from google.colab import drive
-# drive.mount('/content/drive')
-
-# con = duckdb.connect(database='/content/drive/MyDrive/projecteADSDB/explotation/explotation.duckdb', read_only=False)
-
-# df_governance = pd.read_sql("SELECT * FROM Governance_Data", con)
-
-"""# melt the datarame"""
-
-# # provisional treatment
-# df_governance.drop_duplicates(inplace=True)
-
-# aruba = df_governance[df_governance["Country Code"] == 'ABW']
-# aruba.head(20)
-
-# df_governance.head(20)
-
-# df_governance = pd.read_sql("SELECT * FROM Governance_Data", con)
-
-# #drop irrelevant columns
-# df_governance.drop(columns=['Country Name', 'Series Name'], inplace=True)
-# df_governance.rename(columns={'1996 [YR1996]': '1996', '2000 [YR2000]': '2000', '2004 [YR2004]':'2004', '2008 [YR2008]':'2008', '2012 [YR2012]':'2012', '2016 [YR2016]':'2016', '2020 [YR2020]':'2020'}, inplace=True)
-
-
-# df_governance = pd.melt(df_governance, id_vars=['Country Code', 'Series Code'], value_vars=['1996', '2000', '2004', '2008', '2012', '2016', '2020'], var_name='year', value_name='value')
-# df_governance['year']=df_governance['year'].astype(int)
-
-# #remove all indicators that are not estimate values
-# df_governance.drop(df_governance[~df_governance['Series Code'].str.contains("EST", case=False)].index, inplace=True)
-
-
-# aaaa = df_governance.groupby(['Country Code', 'year', 'Series Code'], as_index = False).count()
-# aaaa = aaaa[aaaa.value>1]
-
-# for cc in set(aaaa["Country Code"].tolist()):
-#   df_governance = df_governance[df_governance["Country Code"] != cc]
-
-
-# df_governance = df_governance.pivot(index=['Country Code', 'year'], columns= 'Series Code',values="value")
-
-# df_governance.reset_index(inplace=True)
-
-# df_governance.columns = df_governance.columns.str.rstrip('.EST')
-
-# df_governance
-
-# """# Store the dataframe"""
-
-# con.execute("DROP TABLE IF EXISTS Governance_Data;")
-# con.execute("CREATE TABLE IF NOT EXISTS Governance_Data AS SELECT * FROM df_governance")
-
-# """close connection"""
-
-# con.close()
-
+#
 # """# EXECUTION OF THE PROCESS
 
 # """
@@ -79,7 +25,9 @@ def execute_tablepivoting():
   con = duckdb.connect(database=os.path.join(dirname, 'explotation.duckdb'), read_only=False)
   
   # load governance data
-  df_governance = pd.read_sql("SELECT * FROM Governance_Data", con)
+  #df_governance = pd.read_sql("SELECT * FROM Governance_Data", con)
+  
+  df_governance = con.execute("SELECT * FROM Governance_Data;").df()
 
   #drop irrelevant columns
   df_governance.drop(columns=['Country Name', 'Series Name'], inplace=True)

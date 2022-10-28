@@ -12,175 +12,38 @@ Original file is located at
 import duckdb
 import pandas as pd
 import os
-""" 
-from google.colab import drive
-drive.mount('/content/drive') """
-
-"""### Read data"""
-
-# to use a database file (not shared between processes)
-""" con = duckdb.connect(database='/content/drive/MyDrive/projecteADSDB/trusted/trusted.duckdb', read_only=False)
-print(con.execute('SELECT 1').fetchall())
-
-tables = con.execute("SHOW TABLES").fetchall()
-tables = list([t for (t,) in tables])
-
-tables
-
-for ds in tables:
-   df = con.execute(f'SELECT * FROM {ds}').df()
-   #df.isna().sum().plot(kind='bar')
-   print(df.head())
-
-df = con.execute("SELECT * FROM Olympics_Data;").df()
-df.head()
-
-df.isna().sum() """
-
-"""### Missing values function"""
-
-""" import pandas as pd
-import numpy as np
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.impute import KNNImputer
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-
-def missing_values(df):
-
-
-  df = df.replace({None: np.nan})
-  #select categorical and numerical features
-  numerical_features = df.select_dtypes("number")
-  categorical_features = df.select_dtypes("object")
-
-  # scaler = MinMaxScaler(feature_range=(0,1))
-
-  # creating the pipline for numerical values
-  numeric_transformer = Pipeline(
-     steps=[("imputer", KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean'))]
-      # steps=[("imputer", SimpleImputer(strategy='most_frequent', missing_values=np.nan))]
-  )
-
-  # creating the pipline for categorical values
-  categorical_transformer = SimpleImputer(strategy='most_frequent', missing_values=np.nan)
-  #categorical_transformer = KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean')
-
-  # Preprocessor
-  preprocessor = ColumnTransformer(
-      transformers=[
-          ("num", numeric_transformer, numerical_features.columns),
-          ("cat", categorical_transformer, categorical_features.columns),
-      ]
-  )
-
-
-  pipline_result = preprocessor.fit_transform(df)
-
-  #transform the numpy result into the original dataframe
-  # pipline_result = scaler.inverse_transform(pipline_result)
-
-  #TODO: SOLVE that return values are scaled  
-  pipline_result = pd.DataFrame(pipline_result, columns=df.columns)
-
-
- # pipeline_result = pd.DataFrame(pipline_result)
-
-  #result = {"result", pipline_result, "preprocessor", preprocessor}
-
-  return pipline_result """
-
-""" df.head()
-
-df_e = missing_values(df)
-
-df_e.head() """
-
-
-
-"""### Apply the function """
-""" 
-for ds in tables:
-  # table as dataframe
-  df = con.execute(f'SELECT * FROM {ds}').df()
-  # apply function
-  df = missing_values(df)
-  # replace table with new imputed one
-  con.execute(f'DROP TABLE IF EXISTS {ds};')
-  con.execute(f'CREATE TABLE IF NOT EXISTS {ds} AS SELECT * FROM df;')
-
-for ds in tables:
-   df = con.execute(f'SELECT * FROM {ds}').df()
-   df.isna().sum().plot(kind='bar') """
-
-"""### Save the results"""
-
-""" con.execute("SHOW TABLES").fetchall()
-
-df = con.execute("SELECT * FROM Olympics_Data;").df()
-
-df.head()
-
-con.close()
- """
-"""# EXECUTION OF THE PROCESS"""
 
 import pandas as pd
 import numpy as np
-""" from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.impute import KNNImputer
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer """
-
-
 from sklearn.impute import SimpleImputer
+
 def missing_values(df):
-
+  # replace None for Nan
   df = df.replace({None: np.nan})
+
   #select categorical and numerical features
-  # numerical_features = df.select_dtypes("number")
-  # categorical_features = df.select_dtypes("object")
+  numerical_features = df.select_dtypes(include=np.number)
+  categorical_features = df.select_dtypes(include=['object'])
 
-  # scaler = MinMaxScaler(feature_range=(0,1))
+  # Treat numearical categories using median 
+  numeric_imputer = SimpleImputer(strategy='median', missing_values=np.nan)
+  imputed_numerical_df = numeric_imputer.fit_transform(numerical_features)
+  imputed_numerical_df = pd.DataFrame(imputed_numerical_df, columns=numerical_features.columns)
 
-  # creating the pipline for numerical values
-  # numeric_transformer = Pipeline(
-  #    steps=[("imputer", KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean'))]
-  #     # steps=[("imputer", SimpleImputer(strategy='most_frequent', missing_values=np.nan))]
-  # )
-
-  # creating the pipline for categorical values
-  categorical_transformer = SimpleImputer(strategy='most_frequent', missing_values=np.nan)
-  #categorical_transformer = KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean')
-
-  # Preprocessor
-  # preprocessor = ColumnTransformer(
-  #     transformers=[
-  #         ("num", numeric_transformer, numerical_features.columns),
-  #         ("cat", categorical_transformer, categorical_features.columns),
-  #     ]
-  # )
+  # TReat categorical using mode
+  categorical_imputer = SimpleImputer(strategy="most_frequent", missing_values=np.nan)
+  imputed_categorical_df = categorical_imputer.fit_transform(categorical_features)
+  imputed_categorical_df = pd.DataFrame(imputed_categorical_df, columns=categorical_features.columns)
 
 
-  pipline_result = categorical_transformer.fit_transform(df)
+  # combine results and apply same order an type as original dataframe
+  imputed_df = pd.concat([imputed_numerical_df, imputed_categorical_df], axis=1)
+  imputed_df = imputed_df[df.columns].astype(df.dtypes) #order
 
-  #transform the numpy result into the original dataframe
-  # pipline_result = scaler.inverse_transform(pipline_result)
-
-  #TODO: SOLVE that return values are scaled  
-  pipline_result = pd.DataFrame(pipline_result, columns=df.columns)
+  return imputed_df
 
 
- # pipeline_result = pd.DataFrame(pipline_result)
-
-  #result = {"result", pipline_result, "preprocessor", preprocessor}
-
-  return pipline_result
-  
-
-
+"""# EXECUTION OF THE PROCESS"""
 
 def executeMissingData():
   

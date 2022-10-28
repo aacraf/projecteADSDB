@@ -8,20 +8,13 @@ Original file is located at
 
 ### Read data
 """
-
-#!pip install duckdb
 import duckdb
 import pandas as pd
 import numpy as np
 import os
 #import matplotlib.pyplot as plt
 
-# from google.colab import drive
-# drive.mount('/content/drive')
 
-# to use a database file (not shared between processes)
-# con = duckdb.connect(database='/content/drive/MyDrive/projecteADSDB/trusted/trusted.duckdb', read_only=False)
-# print(con.execute('SELECT 1').fetchall())
 
 """# Outlier detection
 ## Visualization
@@ -52,45 +45,11 @@ def outlierRemoving(df):
   #print('before... ', df.size)
   for col in numdf:
     q = df[col].quantile(0.99)
-    df = df[numdf[col] < q]
+    valid = numdf[col] < q
+    df = df.loc[valid]
   #print('after... ', df.size)
   return df
 
-"""Outlier visualization"""
-
-# l = con.execute("SHOW TABLES").fetchall()
-# tables = list([t for (t,) in l])
-
-# dictds = {}
-
-# for ds in tables:
-#   # table as dataframe
-#   df = con.execute(f'SELECT * FROM {ds}').df()
-#   dictds[ds] = df
-#   # apply function
-#   outlierVisualization(dictds[ds])
-
-# """### Outlier removal """
-
-# for ds in tables:
-#   # apply function
-#   df = outlierRemoving(dictds[ds])
-#   dictds[ds] = df
-#   # replace table with new imputed one
-#   con.execute(f'DROP TABLE IF EXISTS {ds};')
-#   con.execute(f'CREATE TABLE IF NOT EXISTS {ds} AS SELECT * FROM df;')
-
-# """### Visualize the results"""
-
-# for ds in tables:
-#   # apply function
-#   outlierVisualization(dictds[ds])
-
-# con.execute("SHOW TABLES").fetchall()
-
-# """Close connection"""
-
-# con.close()
 
 """# EXECUTION OF PROCESS"""
 

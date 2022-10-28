@@ -65,7 +65,7 @@ def describeExplotationDB():
   data = dict((x.split('$')[0],list(y)) for x, y in itertools.groupby(tables, get_field_sub))
 
   for ds in data:
-    df = con.execute(f'SELECT * FROM {data[ds][0]}').df()
+    df = con.execute(f'SELECT * FROM {ds}').df()
     print(f'\n\n\n ======================== {ds} ========================\n\n')
     print(df.info())
 

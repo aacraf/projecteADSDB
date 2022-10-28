@@ -39,12 +39,12 @@ class Wrapper:
 
     # load or create a wrapper instance
     def __init__(self):
-      try:
-        with open(os.path.join(dirname, 'wrapper.json'),  encoding='utf-8') as wrapper:
-          self.wrapper = json.load(wrapper)
-      except:
-        self.wrapper = dict()
-            
+        try:
+            with open(os.path.join(dirname, 'wrapper.json'),  encoding='utf-8') as wrapper:
+                self.wrapper = json.load(wrapper)
+        except:
+            self.wrapper = dict()
+
     # get wrapper object
     def getWrapper(self):
         return self.wrapper
@@ -53,8 +53,21 @@ class Wrapper:
     def getDataSources(self):
         print(list(self.wrapper.keys()))
 
+    def addNewDatasource(self, path):
+        # arxiu csv
+        filename = os.path.split(path)[1]
+        filename_wo_extension = filename.split('.')[0]
+        if filename_wo_extension not in os.listdir(os.path.join(dirname, 'temporal')):
+            # create datasoure directory
+            os.mkdir(f'{os.path.join(dirname,"temporal")}/{filename_wo_extension}')
+        # copy file to datasource
+        shutil.copy(path, f'{os.path.join(dirname,"temporal")}/{filename_wo_extension}/{filename}')
+
     # Read datasources from a folder (e.g: temporal)
     def readFolder(self, folder_path):
+        
+        if path.exists(os.path.join(dirname, 'persistent')) == False:
+                os.mkdir(os.path.join(dirname, 'persistent'))
 
         for datasource in os.listdir(folder_path):
             file_list = os.listdir(folder_path+"/"+datasource)

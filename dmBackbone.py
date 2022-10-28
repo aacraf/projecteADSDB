@@ -173,8 +173,8 @@ while True:
             print("Cleaning trusted zone...")
             if os.path.exists((os.path.join(dirname, 'trusted/storage/trusted.duckdb'))):
                 os.remove((os.path.join(dirname, 'trusted/storage/trusted.duckdb')))
-            if os.path.exists((os.path.join(dirname, 'trusted/storage/profile_reports'))):
-                shutil.rmtree((os.path.join(dirname, 'trusted/storage/profile_reports')))
+            if os.path.exists((os.path.join(dirname, 'trusted/processes/data_quality/profile_reports'))):
+                shutil.rmtree((os.path.join(dirname, 'trusted/processes/data_quality/profile_reports')))
             print("Done!")
 
             print("Cleaning exploitation zone...")

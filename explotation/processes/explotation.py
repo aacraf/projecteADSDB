@@ -36,7 +36,7 @@ def execute_explotation():
   con.close()
 
   # create duckdb database in explotation
-  print("EXPLOTATION PATH: ", os.path.join(dirname, '../storage/explotation.duckdb'))
+  #print("EXPLOTATION PATH: ", os.path.join(dirname, '../storage/explotation.duckdb'))
   con = duckdb.connect(database=os.path.join(dirname, '../storage/explotation.duckdb'), read_only=False)
 
   # store tables in trusted database

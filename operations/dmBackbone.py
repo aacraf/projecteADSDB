@@ -22,6 +22,10 @@ from explotation.dataintegration import execute_dataIntegration
 from explotation.explotation_infodb import describeExplotationDB
 
 
+# teting 
+from unittest import TestLoader, TestResult
+from pathlib import Path
+
 # additional
 import os
 import shutil
@@ -40,7 +44,7 @@ def menu_options():
     print("6. Testing")
     print("7. Exit")
 
-    print("\nSelect a option 1-7: ")
+    print("\nSelect a option (Number between 1-7): ")
 
 
 ### Execute
@@ -69,10 +73,9 @@ ________          __                 _____                                      
 # relative path
 dirname = os.path.dirname(__file__)
 
-menu_options()
-
-option = input()
-while option: 
+while True: 
+    menu_options()
+    option = input() 
     if option.isdigit():
         # Execute the different zones of the DMBackbone pipeline
         if int(option) == 1:
@@ -153,6 +156,7 @@ while option:
             print("Cleaning landing zone...")
             if os.path.exists((os.path.join(dirname, 'landing/persistent'))):
                 shutil.rmtree((os.path.join(dirname, 'landing/persistent')))
+            if os.path.exists((os.path.join(dirname, 'landing/wrapper.json'))):
                 os.remove((os.path.join(dirname, 'landing/wrapper.json')))
             print("Done!")
             
@@ -173,21 +177,47 @@ while option:
                 os.remove((os.path.join(dirname, 'explotation/explotation.duckdb')))
             
             print("DMBackbone has been cleaned!")
+       
+        # testing
+        # from user Jesuisme at https://stackoverflow.com/questions/14282783/call-a-python-unittest-from-another-script-and-export-all-the-error-messages
+        elif int(option) == 6:
+
+            print("Running tests...")
+            
+            test_loader = TestLoader()
+            test_result = TestResult()
+
+            # Use resolve() to get an absolute path
+            # https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
+            test_directory = str(Path(__file__).resolve().parent / 'testing')
+
+            test_suite = test_loader.discover(test_directory, pattern='test_*.py')
+            test_suite.run(result=test_result)
+
+            # See the docs for details on the TestResult object
+            # https://docs.python.org/3/library/unittest.html#unittest.TestResult
+
+            if test_result.wasSuccessful():
+                print("Unit Tests Passed!")
+                exit(0)
+            else:
+                # Here you can either print or log your test errors and failures
+                print(test_result.failures)
+                # test_result.errors or test_result.failures
+                exit(-1) 
+        
         #stop the programm
         elif int(option) == 7:
             break;
         else:
-            print("Please, select a valid option (Number between 1-7)")
+            print("Error: Please, select a valid option (Number between 1-7)")
     else:
-        print("Please, select a valid option (Number between 1-7)")
+        print("Error: Please, select a valid option (Number between 1-7)")
     
-    choice = input('\nPress q to quit, any key continue: ')
-    if choice == 'q':
-        break
-    else:
-        # clear terminal
-        os.system('cls' if os.name == 'nt' else 'clear')
-        # show options again
-        menu_options()
-        option = input()
+    choice = input('\nPress any key to show options... ')
+
+    # clear terminal
+    os.system('cls' if os.name == 'nt' else 'clear')
+    # show options again
+        
 

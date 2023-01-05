@@ -11,7 +11,7 @@ class TestFormatted(unittest.TestCase):
     def test_zoneExecution(self):
         executeformatted()
         
-        path = pl.Path(os.path.join(dirname, '../formatted/formatted.duckdb'))
+        path = pl.Path(os.path.join(dirname, '../DataManagmentBackbone/formatted/formatted.duckdb'))
         #self.assertIs(os.path.exists(os.path.join(dirname, '../formatted/formatted.duckdb')), True, "Error creating formatted zone")
         
         self.assertEquals((str(path), path.is_file()), (str(path), True), msg="Error executing zone")

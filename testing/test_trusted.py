@@ -1,14 +1,8 @@
-import os 
-import json
+import os
 import unittest
 
 
-from trusted.processes.combine_versions import execute_combine_versions
-from trusted.processes.data_quality.missing import executeMissingData
-from trusted.processes.data_quality.outliers import execute_outliers
-from trusted.processes.data_quality.profiling import execute_profiling
-from trusted.processes.trusted_infodb import describeTrustedDB
-
+from DataManagmentBackbone.trusted.processes.combine_versions import execute_combine_versions
 
 dirname = os.path.dirname(__file__)
 
@@ -18,7 +12,7 @@ class TestTusted(unittest.TestCase):
         
         execute_combine_versions()
         
-        self.assertIs(os.path.exists(os.path.join(dirname, '../trusted/trusted.duckdb')), True, "Error creating trusted zone")
+        self.assertIs(os.path.exists(os.path.join(dirname, '../DataManagmentBackbone/trusted/trusted.duckdb')), True, "Error creating trusted zone")
     
     def test_missingDataMethod(self):
         pass

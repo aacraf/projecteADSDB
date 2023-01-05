@@ -1,7 +1,5 @@
-import os 
-import json
+import os
 import unittest
-from landing.landing import Wrapper, executeLanding
 
 dirname = os.path.dirname(__file__)
 

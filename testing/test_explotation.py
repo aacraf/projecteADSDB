@@ -1,13 +1,7 @@
-import os 
-import json
+import os
 import unittest
 
-from explotation.processes.explotation import execute_explotation
-from explotation.processes.tablepivoting import execute_tablepivoting
-from explotation.processes.dataintegration import execute_dataIntegration
-from explotation.processes.explotation_infodb import describeExplotationDB
-
-
+from DataManagmentBackbone.explotation.processes.explotation import execute_explotation
 
 dirname = os.path.dirname(__file__)
 
@@ -17,7 +11,7 @@ class TestTusted(unittest.TestCase):
         
         execute_explotation()
         
-        self.assertIs(os.path.exists(os.path.join(dirname, '../explotation/explotation.duckdb')), True, "Error creating explotation zone")
+        self.assertIs(os.path.exists(os.path.join(dirname, '../DataManagmentBackbone/explotation/explotation.duckdb')), True, "Error creating explotation zone")
     
     def test_tablePivoting(self):
         pass

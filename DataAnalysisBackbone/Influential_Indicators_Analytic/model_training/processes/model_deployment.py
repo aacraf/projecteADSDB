@@ -28,8 +28,8 @@ def show_model_list():
 
         print(f'MODEL {idx} - {model}')
         print(model_metadata)
-        which_model = input("Please, select a model (number) to deploy or quit: ")
-        return which_model
+    which_model = input("Please, select a model (number) to deploy or quit: ")
+    return which_model
 
 
 def deploy_model():

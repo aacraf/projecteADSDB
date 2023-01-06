@@ -28,16 +28,13 @@ def execute_profiling():
   tables = list([t for (t,) in tables])
 
   #profile tables
-  
   if os.path.exists(os.path.join(dirname, 'profile_reports')) == False:
         os.mkdir(os.path.join(dirname, 'profile_reports'))
 
-  
   for ds in tables:
     df = con.execute(f'SELECT * FROM {ds}').df()
     print(f'\n\nCreating report for {ds} DataSource...\n')
     profile = ProfileReport(df, title=ds, html={'style' : {'full_width':True}})
-    profile.to_file(os.path.join(dirname, f'profile_reports/{ds}_report.html'))
-
-  #close connection
+    profile.to_file(os.path.join(dirname, f'./profile_reports/{ds}_report.html'))
+  # close connection
   con.close()

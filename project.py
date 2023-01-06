@@ -1,6 +1,7 @@
 ### Main
 
 
+## Data Managment Backbone
 # landing
 from DataManagmentBackbone.landing.landing import executeLanding
 from DataManagmentBackbone.landing.data_discovery import executeDataDiscovery
@@ -24,19 +25,18 @@ from DataManagmentBackbone.explotation.processes.tablerenaming import execute_ta
 from DataManagmentBackbone.explotation.processes.explotation_infodb import describeExplotationDB
 
 
+## Data Analysis Backbone
 # analyticalsandbox
 from DataAnalysisBackbone.Influential_Indicators_Analytic.analyticsandbox.processes.analytic_sandbox import execute_analytical_sandbox
 
 # feature generation
 from DataAnalysisBackbone.Influential_Indicators_Analytic.feature_generation.processes.featuregeneration import execute_feature_generation
-from DataAnalysisBackbone.Influential_Indicators_Analytic.feature_generation.processes.profiling_datasets import execute_profiling
+from DataAnalysisBackbone.Influential_Indicators_Analytic.feature_generation.processes.profiling_datasets import execute_profiling_datasets
 
 # model training
 from DataAnalysisBackbone.Influential_Indicators_Analytic.model_training.processes.model_preparation import  execute_model_preparation
-from DataAnalysisBackbone.Influential_Indicators_Analytic.model_training.processes.model_validation import execute_model_validation
-from DataAnalysisBackbone.Influential_Indicators_Analytic.model_training.processes.model_deployment import deploy_model
-
-
+from DataAnalysisBackbone.Influential_Indicators_Analytic.model_training.processes.model_validation import execute_model_validation, show_model_feature_importance
+from DataAnalysisBackbone.Influential_Indicators_Analytic.deployment.model_deployment import deploy_model
 
 
 # teting
@@ -48,29 +48,45 @@ import os
 import shutil
 import webbrowser
 from tkinter.filedialog import askopenfilename
-import time
 
 
 def menu_options():
+    DMDone = os.path.exists((os.path.join(dirname, 'DataManagmentBackbone/explotation/storage/explotation.duckdb')))
+
     print("\n\n\n ============= MENU OPTIONS =============\n")
+
     print("0. Add a new datasource from World Data Bank")
     print("1. Execute DMBackbone")
-    print("2. Add a new datasource to landing zone")
+    print("2. Add a new datasource to landing zone (file)")
     print("3. Show databases")
     print("4. Produce profiling reports (open in default browser)")
     print("5. Clean the DMBackbone")
-    print("6. Execute DABackbone")
-    print("7. Validate existing models")
-    print("8. Deploy existing models")
-    print("9. Show models indicators importances")
-    print("10. Testing")
-    print("11. Exit")
+    if DMDone:
+        print("6. Execute DABackbone")
+        print("7. Generate profiling reports for train and test datasets")
+        print("8. Validate existing models")
+        print("9. Deploy existing models")
+        print("10. Show models indicators importances")
+    else:
+        print("Execute DMBackbone to see more options!")
+    print("11. Testing")
+    print("12. Exit")
 
-    print("\nSelect a option (Number between 0-7): ")
+
+
+
+    option = input("\nSelect a option (number): ")
+
+    if option.isdigit():
+        option = int(option)
+        if not DMDone:
+            if option > 5 and option <11:
+                option = 9999
+
+    return str(option)
 
 
 ### Execute
-
 print(r"""\
 
 ██╗███╗   ██╗███████╗██╗     ██╗   ██╗███████╗███╗   ██╗████████╗██╗ █████╗ ██╗          ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗██████╗ ██╗   ██╗    
@@ -105,8 +121,7 @@ dirname = os.path.dirname(__file__)
 DMDone = False
 
 while True:
-    menu_options()
-    option = input()
+    option = menu_options()
     if option.isdigit():
         # Execute the different zones of the DMBackbone pipeline
 
@@ -223,7 +238,7 @@ while True:
 
 
         # Execute Data Analysis Backbone
-        elif int(option) == 6 and DMDone:
+        elif int(option) == 6:
             # analytical sandbox
             print("...Executing Analytical Sandbox")
             execute_analytical_sandbox()
@@ -238,21 +253,24 @@ while True:
             execute_model_validation()
             print("...Deploying Model")
             deploy_model()
+        # Profiling reports
+        elif int(option) == 7:
+            execute_profiling_datasets()
         # Validate existing models
-        elif int(option) == 7 and DMDone:
+        elif int(option) == 8:
             execute_model_validation()
         # Deploy existing models
-        elif int(option) == 8 and DMDone:
+        elif int(option) == 9:
             deploy_model()
 
         #Show models indicators importances
-        elif int(option) == 9 and DMDone:
-            pass
+        elif int(option) == 10:
+            show_model_feature_importance()
 
 
         # testing
         # from user Jesuisme at https://stackoverflow.com/questions/14282783/call-a-python-unittest-from-another-script-and-export-all-the-error-messages
-        elif int(option) == 10:
+        elif int(option) == 11:
 
             print("Running tests...")
 
@@ -277,12 +295,12 @@ while True:
                 # test_result.errors or test_result.failures
 
         # stop the programm
-        elif int(option) == 11:
+        elif int(option) == 12:
             break;
         else:
-            print("Error: Please, select a valid option (Number between 1-7)")
+            print("Error: Please, select a valid option")
     else:
-        print("Error: Please, select a valid option (Number between 1-7)")
+        print("Error: Please, select a valid option")
 
     choice = input('\nPress enter key to show options... ')
 

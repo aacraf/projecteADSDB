@@ -5,18 +5,13 @@ from analyticsandbox.processes.analytic_sandbox import execute_analytical_sandbo
 
 # feature generation
 from feature_generation.processes.featuregeneration import execute_feature_generation
-from feature_generation.processes.profiling_datasets import execute_profiling
 
 # model training
 from model_training.processes.model_preparation import  execute_model_preparation
 from model_training.processes.model_validation import execute_model_validation
-from model_training.processes.model_deployment import deploy_model
+from DataAnalysisBackbone.Influential_Indicators_Analytic.deployment.model_deployment import deploy_model
 
 import os
-import shutil
-import webbrowser
-from tkinter.filedialog import askopenfilename
-import time
 
 
 def menu_options():

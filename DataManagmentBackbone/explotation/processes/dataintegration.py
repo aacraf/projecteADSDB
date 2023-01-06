@@ -89,6 +89,7 @@ def execute_dataIntegration():
   for table in out:
     con.execute(f'DROP TABLE IF EXISTS {table};')
 
+  con.execute("DROP TABLE IF EXISTS Country_Data")
   # we create only one cuntry indicators table with all the dataframes merged together
   con.execute("CREATE TABLE IF NOT EXISTS Country_Data AS SELECT * FROM indidf")
 

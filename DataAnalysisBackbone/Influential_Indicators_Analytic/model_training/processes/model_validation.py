@@ -15,7 +15,7 @@ import numpy as np
 import pickle
 import json
 import sklearn.metrics as metrics
-
+from matplotlib import pyplot as plt
 
 
 
@@ -45,6 +45,22 @@ def select_model_to_validate():
     which_model = input("Please, select a model (number) to explain or Enter to use the one in deployment: ")
     return which_model
 
+
+def show_model_feature_importance():
+    dirname = os.path.dirname(__file__)
+    which_model = select_model_to_validate()
+    models_path = os.path.join(dirname, '../storage/models')
+    models = os.listdir(models_path)
+    if which_model:
+        model_path = os.path.join(models_path, models[int(which_model)])
+    else:
+        model_path = os.path.join(dirname, '../../deployment/model')
+
+    with open(os.path.join(model_path, 'metadata.json'), 'r') as fp:
+        model_metadata = json.load(fp)
+        plt.barh(list(model_metadata.get('feature_importance').keys()), list(model_metadata.get('feature_importance').values()))
+        plt.title(f'{model_metadata.get("type")}_{model_metadata.get("timestamp")}')
+        plt.show()
 
 def execute_model_validation():
     dirname = os.path.dirname(__file__)

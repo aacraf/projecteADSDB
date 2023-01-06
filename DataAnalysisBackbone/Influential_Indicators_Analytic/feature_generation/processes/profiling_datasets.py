@@ -11,7 +11,7 @@ import duckdb
 import os
 from pandas_profiling import ProfileReport
 
-def execute_profiling():
+def execute_profiling_datasets():
 
   dirname = os.path.dirname(__file__)
 

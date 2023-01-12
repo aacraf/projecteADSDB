@@ -2,8 +2,4 @@
 
 ##  ADSDB PROJECT
 
-
-### Part 1: The Data Management Backbone
-
-
 - ANIOL BISQUERT, ACHRAF HMIMOU

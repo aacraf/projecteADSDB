@@ -71,6 +71,8 @@ class Wrapper:
 
         for datasource in os.listdir(folder_path):
             file_list = os.listdir(folder_path+"/"+datasource)
+            if '.DS_Store' in file_list:
+                file_list.remove('.DS_Store')
             value = []
             if len(file_list):
                 for filename in file_list:

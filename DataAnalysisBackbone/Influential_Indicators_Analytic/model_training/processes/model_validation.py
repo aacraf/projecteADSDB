@@ -53,6 +53,8 @@ def show_model_feature_importance():
     which_model = select_model_to_validate()
     models_path = os.path.join(dirname, '../storage/models')
     models = os.listdir(models_path)
+    if '.DS_Store' in models:
+        models.remove('.DS_Store')
     if which_model:
         model_path = os.path.join(models_path, models[int(which_model)])
     else:
@@ -76,6 +78,8 @@ def execute_model_validation():
     which_model = select_model_to_validate()
     models_path = os.path.join(dirname, '../storage/models')
     models = os.listdir(models_path)
+    if '.DS_Store' in models:
+        models.remove('.DS_Store')
     if which_model:
         model_path = os.path.join(models_path, models[int(which_model)])
     else:

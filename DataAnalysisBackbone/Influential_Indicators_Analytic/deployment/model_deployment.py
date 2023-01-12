@@ -21,6 +21,8 @@ def show_model_list():
     dirname = os.path.dirname(__file__)
     models_path = os.path.join(dirname, '../model_training/storage/models')
     models = os.listdir(models_path)
+    if '.DS_Store' in models:
+        models.remove('.DS_Store')
     for idx, model in enumerate(models):
         model_path = os.path.join(models_path, model)
         with open(os.path.join(model_path, 'metadata.json'), 'r') as fp:
@@ -36,6 +38,8 @@ def deploy_model():
     dirname = os.path.dirname(__file__)
     models_path = os.path.join(dirname, '../model_training/storage/models')
     models = os.listdir(models_path)
+    if '.DS_Store' in models:
+        models.remove('.DS_Store')
     which_model = show_model_list()
     deployment_model_path = os.path.join(dirname, 'model')
 

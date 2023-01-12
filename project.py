@@ -226,7 +226,7 @@ while True:
             if os.path.exists((os.path.join(dirname, 'DataManagmentBackbone/trusted/storage/trusted.duckdb'))):
                 os.remove((os.path.join(dirname, 'DataManagmentBackbone/trusted/storage/trusted.duckdb')))
             if os.path.exists((os.path.join(dirname, 'DataManagmentBackbone/trusted/processes/data_quality/profile_reports'))):
-                shutil.rmtree((os.path.join(dirname, 'tDataManagmentBackbone/rusted/processes/data_quality/profile_reports')))
+                shutil.rmtree((os.path.join(dirname, 'DataManagmentBackbone/trusted/processes/data_quality/profile_reports')))
             print("Done!")
 
             print("Cleaning exploitation zone...")
@@ -239,6 +239,14 @@ while True:
 
         # Execute Data Analysis Backbone
         elif int(option) == 6:
+
+            # remove databases
+            if os.path.exists((os.path.join(dirname, 'DataAnalysisBackbone/influential_indicators_Analytic/analyticalsandbox/storage/sandboxes/olympics_indicators.duckdb'))):
+                os.remove((os.path.join(dirname, 'DataAnalysisBackbone/influential_indicators_Analytic/analyticalsandbox/storage/sandboxes/olympics_indicators.duckdb')))
+
+            if os.path.exists((os.path.join(dirname, 'DataAnalysisBackbone/influential_indicators_Analytic/feature_generation/storage/datasets.duckdb'))):
+                os.remove((os.path.join(dirname, 'DataAnalysisBackbone/influential_indicators_Analytic/feature_generation/storage/datasets.duckdb')))
+
             # analytical sandbox
             print("...Executing Analytical Sandbox")
             execute_analytical_sandbox()

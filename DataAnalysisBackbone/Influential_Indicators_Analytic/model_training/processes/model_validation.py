@@ -34,6 +34,8 @@ def select_model_to_validate():
     dirname = os.path.dirname(__file__)
     models_path = os.path.join(dirname, '../storage/models')
     models = os.listdir(models_path)
+    if '.DS_Store' in models:
+        models.remove('.DS_Store')
     for idx, model in enumerate(models):
         model_path = os.path.join(models_path, model)
         with open(os.path.join(model_path, 'metadata.json'), 'r') as fp:
